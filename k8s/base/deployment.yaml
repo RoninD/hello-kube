@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  hello-kube
+  namespace: default
+  labels:
+    app:  hello-kube
+spec:
+  selector:
+    matchLabels:
+      app: hello-kube
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  hello-kube
+    spec:
+      containers:
+      - name:  hello-kube
+        image:  rowo2206/hello-kube:1.1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        # env:
+        # - name: DB_HOST
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: hello-kube
+        #       key: DB_HOST
+        ports:
+        - containerPort:  8080
+          name:  hello-kube
+      restartPolicy: Always
